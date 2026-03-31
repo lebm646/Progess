@@ -3,7 +3,7 @@ import { CSS } from '@dnd-kit/utilities'
 import { useState, useEffect } from 'react'
 import supabase from '../lib/supabase'
 
-export default function KanbanCard({ card, onClick, labelRefresh }) {
+export default function KanbanCard({ card, onClick, labelRefresh = 0 }) {
   const [labels, setLabels] = useState([])
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -21,7 +21,7 @@ export default function KanbanCard({ card, onClick, labelRefresh }) {
       .select('label_id, labels(id, name, color)')
       .eq('card_id', card.id)
     setLabels(data?.map(cl => cl.labels) || [])
-  } 
+  }
 
   const style = {
     transform: CSS.Transform.toString(transform),

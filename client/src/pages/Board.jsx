@@ -37,6 +37,81 @@ export default function Board() {
     fetchBoard()
   }, [id])
 
+  useEffect(() => {
+    const channel = supabase
+      .channel('board-' + id)
+
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'cards',
+        filter: `board_id=eq.${id}`
+      }, (payload) => {
+        setCards(prev => {
+          const exists = prev.find(c => c.id === payload.new.id)
+          return exists ? prev : [...prev, payload.new]
+        })
+      })
+
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'cards',
+        filter: `board_id=eq.${id}`
+      }, (payload) => {
+        setCards(prev => prev.map(c => c.id === payload.new.id ? payload.new : c))
+      })
+
+      .on('postgres_changes', {
+        event: 'DELETE',
+        schema: 'public',
+        table: 'cards',
+        filter: `board_id=eq.${id}`
+      }, (payload) => {
+        setCards(prev => prev.filter(c => c.id !== payload.old.id))
+      })
+
+      // Column changes
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'columns',
+        filter: `board_id=eq.${id}`
+      }, (payload) => {
+        setColumns(prev => [...prev, payload.new])
+      })
+
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'columns',
+        filter: `board_id=eq.${id}`
+      }, (payload) => {
+        setColumns(prev => prev.map(c => c.id === payload.new.id ? payload.new : c))
+      })
+
+      .on('postgres_changes', {
+        event: 'DELETE',
+        schema: 'public',
+        table: 'columns',
+        filter: `board_id=eq.${id}`
+      }, (payload) => {
+        setColumns(prev => prev.filter(c => c.id !== payload.old.id))
+      })
+
+      // Card label changes
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'card_labels'
+      }, () => {
+        setLabelRefresh(prev => prev + 1)
+      })
+
+      .subscribe()
+      return () => supabase.removeChannel(channel)
+  }, [id])
+
 async function fetchBoard() {
   try {
     const { data: boardData, error: boardError } = await supabase
@@ -94,8 +169,21 @@ async function fetchBoard() {
       .insert({ title, column_id: columnId, board_id: id, order })
       .select()
       .single()
+  
+    console.log('inserted card data:', data)
+    console.log('inserted card error:', error)
 
-    if (!error) setCards([...cards, data])
+    if (error) {
+      console.error('add card error:', error.message, error.code, error.details)
+      return
+    }
+
+    if (data) {
+      setCards(prev => {
+        const exists = prev.find(c => c.id === data.id)
+        return exists ? prev : [...prev, data]
+      })
+    }
   }
 
   function handleDragStart(event) {
@@ -208,7 +296,7 @@ async function fetchBoard() {
         </div>
 
         <DragOverlay>
-          {activeCard && <KanbanCard card={activeCard} />}
+          {activeCard && <KanbanCard card={activeCard} labelRefresh={labelRefresh}/>}
         </DragOverlay>
       </DndContext>
     {selectedCard && (
