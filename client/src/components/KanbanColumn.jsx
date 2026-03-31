@@ -2,7 +2,7 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useDroppable } from '@dnd-kit/core'
 import KanbanCard from './KanbanCard'
 
-export default function KanbanColumn({ column, cards, onAddCard, onCardClick }) {
+export default function KanbanColumn({ column, cards, onAddCard, onCardClick, labelRefresh }) {
   const { setNodeRef, isOver } = useDroppable({ id: column.id })
 
   return (
@@ -26,6 +26,7 @@ export default function KanbanColumn({ column, cards, onAddCard, onCardClick }) 
               key={card.id}
               card={card}
               onClick={() => onCardClick(card)}
+              labelRefresh={labelRefresh}
             />
           ))}
         </div>

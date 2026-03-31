@@ -27,6 +27,7 @@ export default function Board() {
   const [loading, setLoading] = useState(true)
   const [selectedCard, setSelectedCard] = useState(null)
   const [showLabelManager, setShowLabelManager] = useState(false)
+  const [labelRefresh, setLabelRefresh] = useState(0)
 
   const sensors = useSensors(useSensor(PointerSensor, {
     activationConstraint: { distance: 5 }
@@ -74,6 +75,7 @@ async function fetchBoard() {
 
   function handleCardUpdate(updatedCard) {
     setCards(cards.map(c => c.id === updatedCard.id ? updatedCard : c))
+    setLabelRefresh(prev => prev + 1)
   }
 
   function handleCardDelete(cardId) {
@@ -200,6 +202,7 @@ async function fetchBoard() {
                 .sort((a, b) => a.order - b.order)}
               onAddCard={handleAddCard}
               onCardClick={(card) => setSelectedCard(card)}
+              labelRefresh={labelRefresh}
             />
           ))}
         </div>
