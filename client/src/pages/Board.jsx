@@ -13,6 +13,7 @@ import supabase from '../lib/supabase'
 import { useAuth } from '../context/AuthContext'
 import KanbanColumn from '../components/KanbanColumn'
 import KanbanCard from '../components/KanbanCard'
+import CardModal from '../components/CardModal'
 
 export default function Board() {
   const { id } = useParams()
@@ -23,6 +24,7 @@ export default function Board() {
   const [cards, setCards] = useState([])
   const [activeCard, setActiveCard] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [selectedCard, setSelectedCard] = useState(null)
 
   const sensors = useSensors(useSensor(PointerSensor, {
     activationConstraint: { distance: 5 }
@@ -67,6 +69,14 @@ async function fetchBoard() {
     setLoading(false)
   }
 }
+
+  function handleCardUpdate(updatedCard) {
+    setCards(cards.map(c => c.id === updatedCard.id ? updatedCard : c))
+  }
+
+  function handleCardDelete(cardId) {
+    setCards(cards.filter(c => c.id !== cardId))
+  }
 
   async function handleAddCard(columnId) {
     const title = prompt('Card title:')
@@ -180,7 +190,7 @@ async function fetchBoard() {
                 .filter(c => c.column_id === column.id)
                 .sort((a, b) => a.order - b.order)}
               onAddCard={handleAddCard}
-              onCardClick={(card) => console.log('clicked card', card)}
+              onCardClick={(card) => setSelectedCard(card)}
             />
           ))}
         </div>
@@ -189,6 +199,14 @@ async function fetchBoard() {
           {activeCard && <KanbanCard card={activeCard} />}
         </DragOverlay>
       </DndContext>
+    {selectedCard && (
+      <CardModal
+        card={selectedCard}
+        onClose={() => setSelectedCard(null)}
+        onUpdate={handleCardUpdate}
+        onDelete={handleCardDelete}
+      />
+    )}
     </div>
   )
 }
