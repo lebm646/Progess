@@ -60,6 +60,19 @@ export default function Boards() {
     navigate('/login')
   }
 
+  async function deleteBoard(e, boardId) {
+    e.stopPropagation()
+    if (!confirm('Delete this board? This will delete all columns and cards too.')) return
+  
+    const { error } = await supabase
+      .from('boards')
+      .delete()
+      .eq('id', boardId)
+
+    if (!error) setBoards(boards.filter(b => b.id !== boardId))
+    else console.error(error.message)
+  }
+
   return (
     <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -93,10 +106,26 @@ export default function Boards() {
                 background: '#f4f4f4',
                 borderRadius: '8px',
                 cursor: 'pointer',
-                fontWeight: '500'
+                fontWeight: '500',
+                position: 'relative'
               }}
             >
               {board.title}
+              <button
+                onClick={(e) => deleteBoard(e, board.id)}
+                style={{
+                  position: 'absolute',
+                  top: '8px',
+                  right: '8px',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  color: '#999',
+                  fontSize: '16px'
+                }}
+              >
+                X
+              </button>
             </div>
           ))}
         </div>
