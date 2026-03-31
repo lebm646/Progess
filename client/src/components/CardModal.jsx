@@ -8,23 +8,54 @@ export default function CardModal({ card, onClose, onUpdate, onDelete }) {
     card.due_date ? card.due_date.split('T')[0] : ''
   )
   const [saving, setSaving] = useState(false)
+  const [boardLabels, setBoardLabels] = useState([])
+  const [cardLabelIds, setCardLabelIds] = useState([])
 
-  // Close on Escape key
   useEffect(() => {
     const handleKey = (e) => { if (e.key === 'Escape') onClose() }
     window.addEventListener('keydown', handleKey)
     return () => window.removeEventListener('keydown', handleKey)
   }, [])
 
+  useEffect(() => {
+    fetchLabels()
+  }, [])
+
+  async function fetchLabels() {
+    const { data: allLabels } = await supabase
+      .from('labels')
+      .select('*')
+      .eq('board_id', card.board_id)
+
+    const { data: cardLabels } = await supabase
+      .from('card_labels')
+      .select('label_id')
+      .eq('card_id', card.id)
+
+    setBoardLabels(allLabels || [])
+    setCardLabelIds(cardLabels?.map(cl => cl.label_id) || [])
+  }
+
+  async function toggleLabel(labelId) {
+    const isAttached = cardLabelIds.includes(labelId)
+    if (isAttached) {
+      await supabase.from('card_labels')
+        .delete()
+        .eq('card_id', card.id)
+        .eq('label_id', labelId)
+      setCardLabelIds(cardLabelIds.filter(id => id !== labelId))
+    } else {
+      await supabase.from('card_labels')
+        .insert({ card_id: card.id, label_id: labelId })
+      setCardLabelIds([...cardLabelIds, labelId])
+    }
+  }
+
   async function handleSave() {
     setSaving(true)
     const { data, error } = await supabase
       .from('cards')
-      .update({
-        title,
-        description,
-        due_date: dueDate || null
-      })
+      .update({ title, description, due_date: dueDate || null })
       .eq('id', card.id)
       .select()
       .single()
@@ -56,12 +87,11 @@ export default function CardModal({ card, onClose, onUpdate, onDelete }) {
     const today = new Date()
     const due = new Date(dueDate)
     const diff = (due - today) / (1000 * 60 * 60 * 24)
-    if (diff < 0) return '#e74c3c'      // overdue — red
-    if (diff <= 2) return '#f39c12'     // due soon — amber
-    return '#27ae60'                     // upcoming — green
+    if (diff < 0) return '#e74c3c'
+    if (diff <= 2) return '#f39c12'
+    return '#27ae60'
   }
 
-  // Overlay closes modal when clicking outside
   return (
     <div
       onClick={onClose}
@@ -75,14 +105,9 @@ export default function CardModal({ card, onClose, onUpdate, onDelete }) {
       <div
         onClick={e => e.stopPropagation()}
         style={{
-          background: '#fff',
-          borderRadius: '10px',
-          padding: '2rem',
-          width: '480px',
-          maxWidth: '90vw',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1rem'
+          background: '#fff', borderRadius: '10px',
+          padding: '2rem', width: '480px', maxWidth: '90vw',
+          display: 'flex', flexDirection: 'column', gap: '1rem'
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -128,6 +153,29 @@ export default function CardModal({ card, onClose, onUpdate, onDelete }) {
             </span>
           )}
         </div>
+
+        {boardLabels.length > 0 && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+            <label style={{ fontSize: '13px', color: '#666' }}>Labels</label>
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+              {boardLabels.map(label => (
+                <span
+                  key={label.id}
+                  onClick={() => toggleLabel(label.id)}
+                  style={{
+                    padding: '3px 10px', borderRadius: '12px',
+                    fontSize: '13px', cursor: 'pointer',
+                    background: cardLabelIds.includes(label.id) ? label.color : '#eee',
+                    color: cardLabelIds.includes(label.id) ? '#fff' : '#666',
+                    border: `2px solid ${label.color}`
+                  }}
+                >
+                  {label.name}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.5rem' }}>
           <button

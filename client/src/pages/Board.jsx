@@ -14,6 +14,7 @@ import { useAuth } from '../context/AuthContext'
 import KanbanColumn from '../components/KanbanColumn'
 import KanbanCard from '../components/KanbanCard'
 import CardModal from '../components/CardModal'
+import LabelManager from '../components/LabelManager'
 
 export default function Board() {
   const { id } = useParams()
@@ -25,6 +26,7 @@ export default function Board() {
   const [activeCard, setActiveCard] = useState(null)
   const [loading, setLoading] = useState(true)
   const [selectedCard, setSelectedCard] = useState(null)
+  const [showLabelManager, setShowLabelManager] = useState(false)
 
   const sensors = useSensors(useSensor(PointerSensor, {
     activationConstraint: { distance: 5 }
@@ -173,6 +175,13 @@ async function fetchBoard() {
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
         <button onClick={() => navigate('/boards')}>← Back</button>
         <h1 style={{ margin: 0 }}>{board?.title}</h1>
+        <button onClick={() => setShowLabelManager(true)}>Manage labels</button>
+        {showLabelManager && (
+          <LabelManager
+              boardId={id}
+              onClose={() => setShowLabelManager(false)}
+          />
+        )}
       </div>
 
       <DndContext
