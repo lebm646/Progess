@@ -47,7 +47,8 @@ export default function Boards() {
     await supabase.from('columns').insert([
       { board_id: data.id, title: 'To Do', order: 0 },
       { board_id: data.id, title: 'In Progress', order: 1 },
-      { board_id: data.id, title: 'Done', order: 2 }
+      { board_id: data.id, title: 'In Review', order: 2},
+      { board_id: data.id, title: 'Done', order: 3 }
     ])
 
     setTitle('')
