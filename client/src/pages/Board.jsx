@@ -280,7 +280,7 @@ async function fetchBoard() {
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <div style={{ display: 'flex', gap: '1rem', overflowX: 'auto', alignItems: 'flex-start' }}>
+        <div style={{ display: 'flex', gap: '1rem', overflowX: 'auto', alignItems: 'flex-start', paddingBottom: '12px' }}>
           {columns.map(column => (
             <KanbanColumn
               key={column.id}

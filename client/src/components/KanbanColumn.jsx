@@ -65,7 +65,7 @@ export default function KanbanColumn({ column, cards, onAddCard, onCardClick, la
       </SortableContext>
 
       {/* Add card button */}
-      <div style={{ padding: '0.5rem 0.75rem 0.75rem' }}>
+      <div style={{ padding: '0.5rem 0.75rem 0.75rem 1' }}>
         <button
           onClick={() => onAddCard(column.id)}
           style={{
