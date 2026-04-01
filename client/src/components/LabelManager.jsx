@@ -2,8 +2,13 @@ import { useState, useEffect } from 'react'
 import supabase from '../lib/supabase'
 
 const PRESET_COLORS = [
-  '#ef4444', '#f97316', '#f59e0b',
-  '#22c55e', '#3b82f6', '#8b5cf6', '#ec4899'
+  '#F9A8BC', // pink
+  '#B8D8F8', // blue
+  '#B8ECD8', // mint
+  '#D4C8F8', // lavender
+  '#FDDCC8', // peach
+  '#F8E4A8', // butter yellow
+  '#C8EDF8', // sky
 ]
 
 export default function LabelManager({ boardId, onClose }) {
