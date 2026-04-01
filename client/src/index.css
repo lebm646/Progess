@@ -746,6 +746,21 @@ input, textarea {
   border: none;
   font-size: 20px;
   cursor: pointer;
+  background: none;
+  border: none;
+  cursor: pointer;
+  top: 16px;
+  right: 12px;
+  color: var(--text-muted);
+  font-size: 16px;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+.lm-close:hover {
+  background: #FFE4E4;
+  color: #C62828;
 }
 
 /* Form */
@@ -812,4 +827,19 @@ input, textarea {
   border: none;
   cursor: pointer;
   color: #999;
+  top: 16px;
+  right: 12px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 16px;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+
+.lm-delete:hover {
+  background: #FFE4E4;
+  color: #C62828;
 }

@@ -15,27 +15,33 @@ export default function LabelManager({ boardId, onClose }) {
   const [labels, setLabels] = useState([])
   const [name, setName] = useState('')
   const [color, setColor] = useState(PRESET_COLORS[0])
+  const [currentUser, setCurrentUser] = useState(null)
 
   useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => setCurrentUser(user))
     fetchLabels()
-  }, [])
+  }, [boardId])
 
   async function fetchLabels() {
     const { data } = await supabase
       .from('labels')
       .select('*')
       .eq('board_id', boardId)
+    
+    console.log('Fetched labels:', data) // ← does the deleted label appear here?
     setLabels(data || [])
   }
 
   async function handleCreate(e) {
     e.preventDefault()
     if (!name.trim()) return
+
     const { data, error } = await supabase
       .from('labels')
-      .insert({ board_id: boardId, name, color })
+      .insert({ board_id: boardId, name, color, user_id: currentUser.id })
       .select()
       .single()
+
     if (!error) {
       setLabels([...labels, data])
       setName('')
@@ -43,8 +49,9 @@ export default function LabelManager({ boardId, onClose }) {
   }
 
   async function handleDelete(id) {
-    await supabase.from('labels').delete().eq('id', id)
-    setLabels(labels.filter(l => l.id !== id))
+    const { error } = await supabase.from('labels').delete().eq('id', id)
+    if (error) return console.error('Failed to delete label:', error.message)
+    setLabels(prev => prev.filter(l => l.id !== id))
   }
 
   return (

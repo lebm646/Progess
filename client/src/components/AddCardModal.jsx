@@ -10,8 +10,6 @@ export default function AddCardModal({ onClose, onCreate, boardId }) {
   const [cardLabelIds, setCardLabelIds] = useState([])
 
   useEffect(() => { fetchLabels() }, [])
-  console.log(boardId)
-  console.log(boardLabels)
 
   async function handleSave() {
     if (!title.trim()) return
