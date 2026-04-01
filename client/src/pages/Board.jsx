@@ -263,9 +263,25 @@ async function fetchBoard() {
   return (
     <div style={{ padding: '1.5rem' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
-        <button style={{ fontSize: '15px' }} onClick={() => navigate('/boards')}>← Back</button>
+        <button 
+          style={{
+            padding: '0.5rem 1.25rem', borderRadius: 'var(--radius-md)',
+            background: 'var(--surface-2)', color: 'var(--text-secondary)',
+            fontSize: '13px', fontWeight: '600', border: '1px solid var(--border)'
+          }}
+          onClick={() => navigate('/boards')}>
+          ← Back
+        </button>
         <h1 style={{ margin: 0 }}>{board?.title}</h1>
-        <button style={{ fontSize: '15px' }} onClick={() => setShowLabelManager(true)}>Manage labels</button>
+        <button
+          style={{
+              padding: '0.5rem 1.25rem', borderRadius: 'var(--radius-md)',
+              background: 'var(--surface-2)', color: 'var(--text-secondary)',
+              fontSize: '13px', fontWeight: '600', border: '1px solid var(--border)'
+            }} 
+          onClick={() => setShowLabelManager(true)}>
+          Manage labels
+        </button>
         {showLabelManager && (
           <LabelManager
               boardId={id}
