@@ -48,79 +48,62 @@ export default function LabelManager({ boardId, onClose }) {
   }
 
   return (
-    <div
-      onClick={onClose}
-      style={{
-        position: 'fixed', inset: 0,
-        background: 'rgba(0,0,0,0.5)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        zIndex: 1000
-      }}
-    >
-      <div
-        onClick={e => e.stopPropagation()}
-        style={{
-          background: '#fff', borderRadius: '10px',
-          padding: '2rem', width: '400px', maxWidth: '90vw'
-        }}
-      >
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-          <h2 style={{ margin: 0, fontSize: '18px' }}>Manage labels</h2>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer' }}>✕</button>
+    <div className="lm-overlay" onClick={onClose}>
+    <div className="lm-modal" onClick={e => e.stopPropagation()}>
+
+        <div className="lm-header">
+        <h2 className="lm-title">Manage labels</h2>
+        <button className="lm-close" onClick={onClose}>✕</button>
         </div>
 
-        <form onSubmit={handleCreate} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
-          <input
+        <form onSubmit={handleCreate} className="lm-form">
+        <input
+            className="lm-input"
             value={name}
             onChange={e => setName(e.target.value)}
             placeholder="Label name..."
-            style={{ padding: '0.5rem', borderRadius: '6px', border: '1px solid #ddd' }}
-          />
-          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+        />
+
+        <div className="lm-colors">
             {PRESET_COLORS.map(c => (
-              <div
+            <div
                 key={c}
+                className="lm-color"
                 onClick={() => setColor(c)}
                 style={{
-                  width: '28px', height: '28px', borderRadius: '50%',
-                  background: c, cursor: 'pointer',
-                  outline: color === c ? '3px solid #000' : 'none',
-                  outlineOffset: '2px'
+                background: c,
+                outline: color === c ? '3px solid #000' : 'none',
                 }}
-              />
+            />
             ))}
-          </div>
-          <button
-            type="submit"
-            style={{
-              padding: '0.5rem', borderRadius: '6px',
-              background: '#3b82f6', color: '#fff',
-              border: 'none', cursor: 'pointer'
-            }}
-          >
+        </div>
+
+        <button type="submit" className="lm-btn">
             Add label
-          </button>
+        </button>
         </form>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          {labels.map(label => (
-            <div key={label.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{
-                background: label.color, color: '#fff',
-                padding: '3px 10px', borderRadius: '12px', fontSize: '13px'
-              }}>
+        <div className="lm-list">
+        {labels.map(label => (
+            <div key={label.id} className="lm-item">
+            <span
+                className="lm-label"
+                style={{ background: label.color }}
+            >
                 {label.name}
-              </span>
-              <button
+            </span>
+
+            <button
+                className="lm-delete"
                 onClick={() => handleDelete(label.id)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#999' }}
-              >
+            >
                 ✕
-              </button>
+            </button>
             </div>
-          ))}
+        ))}
         </div>
-      </div>
+
+    </div>
     </div>
   )
 }

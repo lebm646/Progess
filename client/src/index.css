@@ -708,3 +708,108 @@ input, textarea {
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;
 }
+
+/* === Label Manager Modal === */
+
+.lm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.lm-modal {
+  background: #fff;
+  border-radius: 10px;
+  padding: 2rem;
+  width: 400px;
+  max-width: 90vw;
+}
+
+/* Header */
+.lm-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.lm-title {
+  margin: 0;
+  font-size: 18px;
+}
+
+.lm-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Form */
+.lm-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.lm-input {
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+/* Color picker */
+.lm-colors {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.lm-color {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  outline-offset: 2px;
+}
+
+/* Button */
+.lm-btn {
+  padding: 0.5rem;
+  border-radius: 6px;
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+/* Label list */
+.lm-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.lm-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lm-label {
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+}
+
+.lm-delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #999;
+}

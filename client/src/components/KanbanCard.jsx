@@ -44,9 +44,6 @@ export default function KanbanCard({ card, onClick, labelRefresh = 0 }) {
       style={{
         // These three must stay inline — they are dynamic values from dnd-kit
         transform: CSS.Transform.toString(transform),
-        // FIX: merge dnd-kit's transform transition with our box-shadow transition.
-        // The old code had two separate `transition` keys in one object — JS silently
-        // drops the first, so the dnd-kit transition was being lost entirely.
         transition: [transition, 'box-shadow 0.15s ease'].filter(Boolean).join(', '),
         opacity: isDragging ? 0.4 : 1,
       }}
