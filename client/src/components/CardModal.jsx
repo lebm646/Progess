@@ -52,12 +52,18 @@ export default function CardModal({ card, onClose, onUpdate, onDelete }) {
   }
 
   function getDueDateColor() {
-    if (!dueDate) return 'var(--text-muted)'
-    const diff = (new Date(dueDate) - new Date()) / (1000 * 60 * 60 * 24)
-    if (diff < 0) return '#C62828'
-    if (diff <= 2) return '#E65100'
-    return '#2E7D32'
-  }
+  if (!dueDate) return 'var(--text-muted)'
+  
+  const today = new Date()
+  today.setHours(0, 0, 0, 0) // strip time
+
+  const due = new Date(dueDate + 'T00:00:00') // parse as local, not UTC
+  
+  const diff = (due - today) / (1000 * 60 * 60 * 24)
+  if (diff < 0) return '#C62828'
+  if (diff <= 2) return '#E65100'
+  return '#2E7D32'
+}
 
   const inputStyle = {
     padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)',
@@ -134,7 +140,10 @@ export default function CardModal({ card, onClose, onUpdate, onDelete }) {
           {dueDate && (
             <p style={{ fontSize: '12px', color: getDueDateColor(), marginTop: '4px', fontWeight: '600' }}>
               {(() => {
-                const diff = Math.ceil((new Date(dueDate) - new Date()) / (1000 * 60 * 60 * 24))
+                const today = new Date()
+                today.setHours(0, 0, 0, 0)
+                const due = new Date(dueDate + 'T00:00:00')
+                const diff = Math.ceil((due - today) / (1000 * 60 * 60 * 24))
                 if (diff < 0) return `⚠️ Overdue by ${Math.abs(diff)} day(s)`
                 if (diff === 0) return '⏰ Due today'
                 return `✅ Due in ${diff} day(s)`

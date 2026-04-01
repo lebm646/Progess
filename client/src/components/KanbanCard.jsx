@@ -5,10 +5,17 @@ import supabase from '../lib/supabase'
 
 function getDueDateStyle(dueDate) {
   if (!dueDate) return null
-  const diff = (new Date(dueDate) - new Date()) / (1000 * 60 * 60 * 24)
-  if (diff < 0) return { bg: '#FFE4E4', color: '#C62828', label: 'Overdue' }
-  if (diff <= 2) return { bg: '#FFF3E0', color: '#E65100', label: 'Due soon' }
-  return { bg: 'var(--accent-mint)', color: '#1B5E20', label: null }
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const due = new Date(dueDate.slice(0, 10) + 'T00:00:00')
+  const diff = Math.ceil((due - today) / (1000 * 60 * 60 * 24))
+
+  const formatted = due.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+
+  if (diff < 0) return { bg: '#FFE4E4', color: '#C62828', label: '⚠️ Overdue' }
+  if (diff === 0) return { bg: '#FFF8E1', color: '#E65100', label: '⏰ Due today' }
+  if (diff <= 2) return { bg: '#FFF3E0', color: '#F57F17', label: '🔔 Due soon' }
+  return { bg: 'var(--accent-mint)', color: '#1B5E20', label: `📅 ${formatted}` }
 }
 
 export default function KanbanCard({ card, onClick, labelRefresh = 0 }) {
@@ -68,7 +75,7 @@ export default function KanbanCard({ card, onClick, labelRefresh = 0 }) {
           background: dueDateStyle.bg, color: dueDateStyle.color,
           borderRadius: '99px', padding: '2px 8px', fontSize: '11px', fontWeight: '700'
         }}>
-          📅 {dueDateStyle.label || new Date(card.due_date).toLocaleDateString()}
+          {dueDateStyle.label || new Date(card.due_date).toLocaleDateString()}
         </div>
       )}
     </div>
