@@ -58,127 +58,62 @@ export default function Boards() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
-      {/* Header */}
-      <div style={{
-        background: 'var(--surface)', borderBottom: '1px solid var(--border)',
-        padding: '1rem 2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        boxShadow: 'var(--shadow-sm)'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <span style={{ fontSize: '24px' }}>🌸</span>
-          <span style={{ fontFamily: 'Lora', fontSize: '20px', fontWeight: '600', color: 'var(--text-primary)' }}>
-            Progress
-          </span>
+    <div className="boards-page">
+
+      <header className="boards-header">
+        <div className="boards-logo">
+          <span className="boards-logo-icon">🌸</span>
+          <span className="boards-logo-text">Progress</span>
         </div>
-        <button
-          onClick={handleLogout}
-          style={{
-            padding: '0.5rem 1.25rem', borderRadius: 'var(--radius-md)',
-            background: 'var(--surface-2)', color: 'var(--text-secondary)',
-            fontSize: '13px', fontWeight: '600', border: '1px solid var(--border)'
-          }}
-          onMouseEnter={e => e.target.style.background = 'var(--border)'}
-          onMouseLeave={e => e.target.style.background = 'var(--surface-2)'}
-        >
+        <button className="boards-btn-logout" onClick={handleLogout}>
           Log out
         </button>
-      </div>
+      </header>
 
-      <div style={{ padding: '2.5rem', maxWidth: '900px', margin: '0 auto' }}>
-        <h2 style={{ fontFamily: 'Lora', fontSize: '28px', marginBottom: '0.25rem' }}>Boards</h2>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '2rem' }}>
+      <div className="boards-content">
+        <h2 className="boards-heading">Boards</h2>
+        <p className="boards-subheading">
           {boards.length} board{boards.length !== 1 ? 's' : ''}
         </p>
 
-        {/* Create board */}
-        <form onSubmit={createBoard} style={{
-          display: 'flex', gap: '0.75rem', marginBottom: '2rem'
-        }}>
+        <form className="boards-create-form" onSubmit={createBoard}>
           <input
-            type="text" placeholder="New board name..."
-            value={title} onChange={e => setTitle(e.target.value)}
-            style={{
-              flex: 1, padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)',
-              border: '1.5px solid var(--border)', fontSize: '14px',
-              background: 'var(--surface)', color: 'var(--text-primary)',
-              boxShadow: 'var(--shadow-sm)'
-            }}
-            onFocus={e => e.target.style.borderColor = 'var(--primary)'}
-            onBlur={e => e.target.style.borderColor = 'var(--border)'}
+            className="boards-create-input"
+            type="text"
+            placeholder="New board name..."
+            value={title}
+            onChange={e => setTitle(e.target.value)}
           />
-          <button
-            type="submit"
-            style={{
-              padding: '0.75rem 1.5rem', borderRadius: 'var(--radius-md)',
-              background: 'var(--primary)', color: 'white',
-              fontSize: '14px', fontWeight: '700',
-              boxShadow: '0 4px 12px rgba(249, 168, 188, 0.4)'
-            }}
-            onMouseEnter={e => e.target.style.background = 'var(--primary-dark)'}
-            onMouseLeave={e => e.target.style.background = 'var(--primary)'}
-          >
+          <button className="boards-create-btn" type="submit">
             + Create
           </button>
         </form>
 
-        {/* Board grid */}
         {loading ? (
-          <p style={{ color: 'var(--text-muted)' }}>Loading...</p>
+          <p className="boards-status-text">Loading...</p>
         ) : boards.length === 0 ? (
-          <div style={{
-            textAlign: 'center', padding: '4rem 2rem',
-            background: 'var(--surface)', borderRadius: 'var(--radius-xl)',
-            border: '1.5px dashed var(--border-strong)'
-          }}>
-            <div style={{ fontSize: '48px', marginBottom: '1rem' }}>🗂️</div>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '15px' }}>No boards yet — create one above!</p>
+          <div className="boards-empty">
+            <div className="boards-empty-icon">🗂️</div>
+            <p className="boards-empty-text">No boards yet — create one above!</p>
           </div>
         ) : (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-            gap: '1rem'
-          }}>
+          <div className="boards-grid">
             {boards.map((board, i) => (
               <div
                 key={board.id}
+                className="board-card"
                 onClick={() => navigate(`/boards/${board.id}`)}
-                style={{
-                  background: 'var(--surface)', borderRadius: 'var(--radius-lg)',
-                  border: '1px solid var(--border)', cursor: 'pointer',
-                  boxShadow: 'var(--shadow-sm)', overflow: 'hidden',
-                  position: 'relative', transition: 'all 0.2s ease'
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.boxShadow = 'var(--shadow-md)'
-                  e.currentTarget.style.transform = 'translateY(-2px)'
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.boxShadow = 'var(--shadow-sm)'
-                  e.currentTarget.style.transform = 'translateY(0)'
-                }}
               >
-                {/* Color strip */}
-                <div style={{
-                  height: '8px',
-                  background: BOARD_COLORS[i % BOARD_COLORS.length]
-                }} />
-                <div style={{ padding: '1.25rem' }}>
-                  <p style={{ fontWeight: '700', fontSize: '15px', color: 'var(--text-primary)' }}>
-                    {board.title}
-                  </p>
+                <div
+                  className="board-card-strip"
+                  style={{ background: BOARD_COLORS[i % BOARD_COLORS.length] }}
+                />
+                <div className="board-card-body">
+                  <p className="board-card-title">{board.title}</p>
                 </div>
                 <button
+                  className="board-card-delete"
                   onClick={(e) => deleteBoard(e, board.id)}
-                  style={{
-                    position: 'absolute', top: '16px', right: '12px',
-                    background: 'none', border: 'none',
-                    color: 'var(--text-muted)', fontSize: '16px',
-                    lineHeight: 1, padding: '2px 6px', borderRadius: '6px'
-                  }}
-                  onMouseEnter={e => { e.target.style.background = '#FFE4E4'; e.target.style.color = '#C62828' }}
-                  onMouseLeave={e => { e.target.style.background = 'none'; e.target.style.color = 'var(--text-muted)' }}
                 >
                   ✕
                 </button>

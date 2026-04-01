@@ -19,87 +19,57 @@ export default function Login() {
   }
 
   return (
-    <div style={{
-      minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
-      background: 'var(--bg)', padding: '1rem'
-    }}>
-      <div style={{
-        background: 'var(--surface)', borderRadius: 'var(--radius-xl)',
-        padding: '3rem', width: '100%', maxWidth: '420px',
-        boxShadow: 'var(--shadow-lg)', border: '1px solid var(--border)'
-      }}>
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <div style={{
-            width: '56px', height: '56px', borderRadius: '16px',
-            background: 'var(--primary-light)', display: 'flex',
-            alignItems: 'center', justifyContent: 'center',
-            margin: '0 auto 1rem', fontSize: '28px'
-          }}>🌸</div>
-          <h1 style={{ fontFamily: 'Lora', fontSize: '26px', color: 'var(--text-primary)', marginBottom: '4px' }}>Welcome back</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Sign in to your boards</p>
+    <div className="auth-page">
+      <div className="auth-card">
+
+        <div className="auth-header">
+          <div className="auth-icon" style={{ background: 'var(--primary-light)' }}>🌸</div>
+          <h1 className="auth-title">Welcome back</h1>
+          <p className="auth-subtitle">Sign in to your boards</p>
         </div>
 
-        <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <label style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-secondary)' }}>Email</label>
+        <form className="auth-form" onSubmit={handleLogin}>
+          <div className="auth-field">
+            <label className="auth-label">Email</label>
             <input
-              type="email" value={email} onChange={e => setEmail(e.target.value)} required
+              className="auth-input"
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
               placeholder="you@example.com"
-              style={{
-                padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)',
-                border: '1.5px solid var(--border)', fontSize: '14px',
-                background: 'var(--surface-2)', color: 'var(--text-primary)'
-              }}
-              onFocus={e => e.target.style.borderColor = 'var(--primary)'}
-              onBlur={e => e.target.style.borderColor = 'var(--border)'}
+              required
             />
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <label style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-secondary)' }}>Password</label>
+          <div className="auth-field">
+            <label className="auth-label">Password</label>
             <input
-              type="password" value={password} onChange={e => setPassword(e.target.value)} required
+              className="auth-input"
+              type="password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
               placeholder="••••••••"
-              style={{
-                padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)',
-                border: '1.5px solid var(--border)', fontSize: '14px',
-                background: 'var(--surface-2)', color: 'var(--text-primary)'
-              }}
-              onFocus={e => e.target.style.borderColor = 'var(--primary)'}
-              onBlur={e => e.target.style.borderColor = 'var(--border)'}
+              required
             />
           </div>
 
-          {error && (
-            <div style={{
-              padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)',
-              background: '#FFF0F0', border: '1px solid #FFCDD2',
-              color: '#C62828', fontSize: '13px'
-            }}>{error}</div>
-          )}
+          {error && <div className="auth-error">{error}</div>}
 
           <button
-            type="submit" disabled={loading}
-            style={{
-              padding: '0.85rem', borderRadius: 'var(--radius-md)',
-              background: 'var(--primary)', color: 'white',
-              fontSize: '15px', fontWeight: '700',
-              boxShadow: '0 4px 12px rgba(249, 168, 188, 0.4)',
-              opacity: loading ? 0.7 : 1, marginTop: '0.5rem'
-            }}
-            onMouseEnter={e => e.target.style.background = 'var(--primary-dark)'}
-            onMouseLeave={e => e.target.style.background = 'var(--primary)'}
+            className="auth-submit"
+            type="submit"
+            disabled={loading}
+            style={{ opacity: loading ? 0.7 : 1 }}
           >
             {loading ? 'Signing in...' : 'Sign in'}
           </button>
         </form>
 
-        <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '14px', color: 'var(--text-secondary)' }}>
+        <p className="auth-footer">
           No account?{' '}
-          <Link to="/register" style={{ color: 'var(--primary-dark)', fontWeight: '700', textDecoration: 'none' }}>
-            Create one
-          </Link>
+          <Link className="auth-link" to="/register">Create one</Link>
         </p>
+
       </div>
     </div>
   )
