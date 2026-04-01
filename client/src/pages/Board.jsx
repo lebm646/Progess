@@ -331,6 +331,7 @@ export default function Board() {
         <AddCardModal
           onClose={() => setAddingToColumn(null)}
           onCreate={handleCreateCard}
+          boardId = {board.id}
         />
       )}
     </div>
