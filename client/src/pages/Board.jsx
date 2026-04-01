@@ -15,6 +15,7 @@ import KanbanColumn from '../components/KanbanColumn'
 import KanbanCard from '../components/KanbanCard'
 import CardModal from '../components/CardModal'
 import LabelManager from '../components/LabelManager'
+import AddCardModal from '../components/AddCardModal'
 
 export default function Board() {
   const { id } = useParams()
@@ -28,6 +29,7 @@ export default function Board() {
   const [selectedCard, setSelectedCard] = useState(null)
   const [showLabelManager, setShowLabelManager] = useState(false)
   const [labelRefresh, setLabelRefresh] = useState(0)
+  const [addingToColumn, setAddingToColumn] = useState(null)
 
   const sensors = useSensors(useSensor(PointerSensor, {
     activationConstraint: { distance: 5 }
@@ -157,33 +159,26 @@ async function fetchBoard() {
     setCards(cards.filter(c => c.id !== cardId))
   }
 
-  async function handleAddCard(columnId) {
-    const title = prompt('Card title:')
-    if (!title?.trim()) return
+  function handleAddCard(columnId) {
+  setAddingToColumn(columnId)
+}
 
-    const columnCards = cards.filter(c => c.column_id === columnId)
+  async function handleCreateCard({ title, description, dueDate }) {
+    const columnCards = cards.filter(c => c.column_id === addingToColumn)
     const order = columnCards.length
 
     const { data, error } = await supabase
       .from('cards')
-      .insert({ title, column_id: columnId, board_id: id, order })
+      .insert({ title, description, due_date: dueDate || null, column_id: addingToColumn, board_id: id, order })
       .select()
       .single()
-  
-    console.log('inserted card data:', data)
-    console.log('inserted card error:', error)
 
-    if (error) {
-      console.error('add card error:', error.message, error.code, error.details)
-      return
-    }
+    if (error) { console.error(error.message); return }
 
     if (data) {
-      setCards(prev => {
-        const exists = prev.find(c => c.id === data.id)
-        return exists ? prev : [...prev, data]
-      })
+      setCards(prev => prev.find(c => c.id === data.id) ? prev : [...prev, data])
     }
+    setAddingToColumn(null)
   }
 
   function handleDragStart(event) {
@@ -321,6 +316,12 @@ async function fetchBoard() {
         onClose={() => setSelectedCard(null)}
         onUpdate={handleCardUpdate}
         onDelete={handleCardDelete}
+      />
+    )}
+    {addingToColumn && (
+      <AddCardModal
+        onClose={() => setAddingToColumn(null)}
+        onCreate={handleCreateCard}
       />
     )}
     </div>
