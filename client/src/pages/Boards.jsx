@@ -68,7 +68,7 @@ export default function Boards() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <span style={{ fontSize: '24px' }}>🌸</span>
           <span style={{ fontFamily: 'Lora', fontSize: '20px', fontWeight: '600', color: 'var(--text-primary)' }}>
-            Kanban
+            Progress
           </span>
         </div>
         <button
@@ -86,7 +86,7 @@ export default function Boards() {
       </div>
 
       <div style={{ padding: '2.5rem', maxWidth: '900px', margin: '0 auto' }}>
-        <h2 style={{ fontFamily: 'Lora', fontSize: '28px', marginBottom: '0.25rem' }}>My Boards</h2>
+        <h2 style={{ fontFamily: 'Lora', fontSize: '28px', marginBottom: '0.25rem' }}>Boards</h2>
         <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '2rem' }}>
           {boards.length} board{boards.length !== 1 ? 's' : ''}
         </p>
