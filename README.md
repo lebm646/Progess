@@ -77,7 +77,8 @@ npm install
 
 ```bash
 npm run dev
+```
 
-## Deployment
+### Deployment
 
 The app is deployed on Vercel.
