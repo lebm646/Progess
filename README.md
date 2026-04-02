@@ -76,8 +76,7 @@ npm install
 ### 3. Run locally
 
 ```bash
-# Terminal 1 - client
-cd client && npm run dev
+npm run dev
 
 ## Deployment
 
