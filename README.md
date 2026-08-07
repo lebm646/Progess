@@ -2,7 +2,7 @@
 
 A Kanban TaskBoard app with boards, cards, and labels. Built with React and Supabase.
 
-🔗 **Live demo:** [progess-psi.vercel.app](https://progess-psi.vercel.app)
+🔗 **Live demo:** [progess-psi.vercel.app](https://progress-by-minh.vercel.app/)
 
 ---
 
